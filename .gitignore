@@ -6,6 +6,21 @@ db.sqlite3
 media
 staticfiles
 staticfiles_build
+node_modules
+.env.local
+.env.*.local
+.env
+.DS_Store
+.vscode
+yarn.lock
+package-lock.json
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
 # Environments 
 .env 

@@ -5,16 +5,6 @@ from django.utils.translation import gettext_lazy as _
 
 @deconstructible
 class TextValidator(validators.RegexValidator):
-    """
-    Validator for usernames.
-
-    Ensures that the username contains only
-    letters, numbers, and the following special characters:
-    - . (dot)
-    - _ (underscore)
-    - - (hyphen)
-    """
-
     regex = r'^[\w.-]+$'
     message = _(
         'Enter a valid username. '
