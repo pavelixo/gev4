@@ -19,7 +19,7 @@ DEBUG = bool(env(
     default='True'
 ))
 
-print(DEBUG)
+print(env('DEBUG'))
 
 ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
 
