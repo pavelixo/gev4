@@ -8,18 +8,10 @@ load(BASE_DIR / ".env", override=True)
 # load(BASE_DIR / ".env.example", override=False)
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env(
-    'SECRET_KEY', 
-    default='django-insecure-=cldztbc4jg&xl0!x673!*v2_=p$$eu)=7*f#d0#zs$44xx-h^'
-)
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(env(
-    'DEBUG',
-    default='True'
-))
-
-print(env('DEBUG'))
+DEBUG = bool(env('DEBUG'))
 
 ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
 
@@ -33,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # apps
     'users',
 ]
 
@@ -72,10 +65,10 @@ WSGI_APPLICATION = 'core.wsgi.app'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('DB_NAME', default='gev4'),
-        'USER': env('DB_USER', default='postgres'),
-        'PASSWORD': env('DB_PASSWORD', default='postgres'),
-        'HOST': env('DB_HOST', default='localhost'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
         'PORT': '5432',
     }
 }
