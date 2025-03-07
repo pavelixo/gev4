@@ -2,8 +2,15 @@
 
 {% block body %}
 {% if not user.is_anonymous %}
-<h1>Hello, World!</h1>
-{{ user }}
+<div class="container mt-5">
+    <div class="card bg-dark text-light border-0">
+        <div class="card-body">
+            <h5 class="card-title">{{ user.display_username }}</h5>
+            <h6 class="card-subtitle mb-2 text-secondary">@{{ user.username }}</h6>
+            <p class="card-text display-4">G$ {{ user.balance }}</p>
+        </div>
+    </div>
+</div>
 {% else %}
 <div class="d-flex justify-content-center align-items-center vh-100 flex-column">
     <div class="bg-dark text-light p-4 rounded text-center">
