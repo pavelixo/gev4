@@ -1,5 +1,17 @@
 {% extends "base.html" %}
 
 {% block body %}
+{% if not user.is_anonymous %}
 <h1>Hello, World!</h1>
+{{ user }}
+{% else %}
+<div class="d-flex justify-content-center align-items-center vh-100 flex-column">
+    <div class="bg-dark text-light p-4 rounded text-center">
+        <strong>Login Required!</strong> Please log in to continue.
+    </div>
+    <div class="d-flex justify-content-center mt-3">
+        <a href="{% url 'login-view' %}" class="btn btn-link custom-button text-decoration-none mr-2">Go to Login</a>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

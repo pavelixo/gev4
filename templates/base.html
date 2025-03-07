@@ -2,14 +2,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}GeV4{% endblock %}</title>
-    {% block head %}{% endblock %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}GeV4{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/globals.css' %}">
+  {% block head %}{% endblock %}
 </head>
-<body class="bg-red-500">
-    {% block body %}{% endblock %}
-    <script defer src="{% static 'js/dist/bundle.js' %}"></script>
-    {% block script %}{% endblock %}
+<body class="bg-dark text-light">
+  {% block body %}{% endblock %}
+
+  <script defer src="{% static 'dist/bundle.js' %}"></script>
+
+  {% block script %}{% endblock %}
 </body>
 </html>
