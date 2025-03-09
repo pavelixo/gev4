@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Mine{% endblock %}
+
+{% block head %}
+<style>
+    .mining-results {
+        max-height: 300px;
+        overflow-y: auto;
+        margin-top: 1rem;
+    }
+    .mining-result-item {
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 0.5rem;
+        border-radius: 0.25rem;
+        animation: slideIn 0.3s ease;
+    }
+    .btn-mine {
+        width: 140px;
+        transition: all 0.2s ease;
+    }
+    @keyframes slideIn {
+        from { transform: translateY(-10px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+{% if not user.is_anonymous %}
+<div class="container mt-4">
+    <div class="card bg-dark text-light border-0">
+        <div class="card-body text-center">
+            <h5 class="card-title">{{ user.display_username }}</h5>
+            <h6 class="card-subtitle mb-2 text-secondary">@{{ user.username }}</h6>
+            <p id="user-balance" class="card-text display-5">G$ {{ user.balance|floatformat:2 }}</p>
+
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <button id="mine-button" class="btn btn-primary btn-mine rounded-pill">
+                    <i class="bi bi-minecart"></i> <span id="mine-text">Mine</span>
+                </button>
+                <button id="back-button" class="btn btn-secondary btn-mine rounded-pill">
+                    <i class="bi bi-box-arrow-left"></i> Back
+                </button>
+            </div>
+
+            <div id="mining-results" class="mining-results mt-3">
+                <!-- Itens de resultado serão adicionados aqui -->
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="d-flex justify-content-center align-items-center vh-100 flex-column">
+    <div class="bg-dark text-light p-4 rounded text-center">
+        <strong>Login Required!</strong> Please log in to continue.
+    </div>
+    <div class="d-flex justify-content-center mt-3">
+        <a href="{% url 'login-view' %}" class="btn btn-link custom-button text-decoration-none mr-2">Go to Login</a>
+    </div>
+</div>
+{% endif %}
+
+{% if not user.is_anonymous %}
+    {% block script %}
+    <script>
+        let isMining = false;
+        let intervalId = null;
+        const miningInterval = 1;
+        const maxResults = 10;
+
+        async function mine() {
+            try {
+                const response = await fetch('/api/games/mine/', {
+                    method: 'GET',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                });
+                
+                const data = await response.json();
+                processResult(data);
+                
+            } catch (error) {
+                addResult('Error: Failed to connect to server', 'danger');
+                console.error('Error:', error);
+            }
+        }
+
+        function processResult(data) {
+            document.getElementById('user-balance').textContent = `G$ ${parseFloat(data.user_balance).toFixed(2)}`;
+            
+            if (data.is_successful) {
+                addResult(`Mined G$ ${data.value.toFixed(2)}`, 'success');
+            } else {
+                addResult('Mining failed: Try again later', 'warning');
+            }
+        }
+
+        function addResult(message, type) {
+            const resultsContainer = document.getElementById('mining-results');
+            const resultItem = document.createElement('div');
+            
+            resultItem.className = `mining-result-item alert-${type} bg-dark-${type} border border-${type}`;
+            resultItem.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <span>${new Date().toLocaleTimeString()}: ${message}</span>
+                    <button class="btn-close btn-close-white" onclick="this.parentElement.parentElement.remove()"></button>
+                </div>
+            `;
+
+            resultsContainer.prepend(resultItem);
+            while(resultsContainer.children.length > maxResults) {
+                resultsContainer.lastChild.remove();
+            }
+        }
+
+        function toggleMining() {
+            if (isMining) {
+                clearInterval(intervalId);
+                isMining = false;
+                addResult('Mining stopped', 'info');
+            } else {
+                intervalId = setInterval(mine, miningInterval);
+                isMining = true;
+                mine(); // Executar imediatamente
+                addResult('Mining started...', 'info');
+            }
+            updateButtonState();
+        }
+
+        function updateButtonState() {
+            const mineText = document.getElementById('mine-text');
+            const button = document.getElementById('mine-button');
+            
+            if (isMining) {
+                mineText.textContent = 'Stop Mining';
+                button.classList.remove('btn-primary');
+                button.classList.add('btn-danger');
+            } else {
+                mineText.textContent = 'Start Mining';
+                button.classList.remove('btn-danger');
+                button.classList.add('btn-primary');
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('mine-button').addEventListener('click', toggleMining);
+        document.getElementById('back-button').addEventListener('click', () => window.history.back());
+    </script>
+    {% endblock %}
+{% endif %}
+{% endblock %}

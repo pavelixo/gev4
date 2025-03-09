@@ -90,6 +90,13 @@ class User(AbstractUser):
 
     objects = UserManager()
 
+    def add_balance(self, amount: Decimal):
+        if amount <= 0:
+            raise ValueError('The amount to be added must be positive.')
+
+        self.balance += Decimal(amount)
+        self.save()
+
     class Meta:
         db_table = 'users'
         verbose_name = 'User'

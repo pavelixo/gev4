@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     # apps
     'users',
     'pages',
+    'games',
 ]
 
 MIDDLEWARE = [
@@ -38,6 +39,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'contrib.middleware.ThrottlingMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -71,6 +74,13 @@ DATABASES = {
         'PASSWORD': env('DB_PASSWORD'),
         'HOST': env('DB_HOST'),
         'PORT': '5432',
+    }
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
     }
 }
 
@@ -123,3 +133,8 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 # Auth user
 AUTH_USER_MODEL = 'users.User'
+
+# THROTTLE
+THROTTLE_REQUESTS_LIMIT = 10
+THROTTLE_TIME_WINDOW = 30
+THROTTLE_CACHE_TIMEOUT = 5

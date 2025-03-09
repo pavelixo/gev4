@@ -4,18 +4,17 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from pages.views import (
-    RootView,
-    LoginView,
-    RegisterView
-)
+from pages.urls import urlpatterns as page_patterns
+from users.urls import urlpatterns as user_patterns
+from games.urls import urlpatterns as game_patterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', LoginView.as_view(), name='login-view'),
-    path('register/', RegisterView.as_view(), name='register-view'),
-    path('', RootView.as_view(), name='root-view')
-]
+] 
+
+urlpatterns += page_patterns
+urlpatterns += user_patterns
+urlpatterns += game_patterns
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
