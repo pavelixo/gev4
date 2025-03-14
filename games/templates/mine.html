@@ -39,13 +39,12 @@
                 <button id="mine-button" class="btn btn-primary btn-mine rounded-pill">
                     <i class="bi bi-minecart"></i> <span id="mine-text">Mine</span>
                 </button>
-                <button id="back-button" class="btn btn-secondary btn-mine rounded-pill">
-                    <i class="bi bi-box-arrow-left"></i> Back
-                </button>
+                <a href="{% url 'root-view' %}"  id="back-button" class="btn btn-secondary btn-mine rounded-pill">
+                    <i class="text-decoration-none bi bi-box-arrow-left"></i> Back
+                </a>
             </div>
 
             <div id="mining-results" class="mining-results mt-3">
-                <!-- Itens de resultado serão adicionados aqui -->
             </div>
         </div>
     </div>
@@ -146,7 +145,6 @@
 
         // Event Listeners
         document.getElementById('mine-button').addEventListener('click', toggleMining);
-        document.getElementById('back-button').addEventListener('click', () => window.history.back());
     </script>
     {% endblock %}
 {% endif %}

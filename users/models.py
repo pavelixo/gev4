@@ -1,5 +1,5 @@
 from decimal import Decimal
-from django.db import models
+from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
 from .base import AbstractUser, AbstractUserManager
 
@@ -96,6 +96,20 @@ class User(AbstractUser):
 
         self.balance += Decimal(amount)
         self.save()
+
+    def transfer_balance(self, recipient: 'User', amount: Decimal):
+        if amount <= 0:
+            raise ValueError('The amount to be transferred must be positive.')
+
+        if self.balance < amount:
+            raise ValueError('Insufficient balance for the transfer.')
+
+        with transaction.atomic():
+            self.balance -= amount
+            self.save()
+
+            recipient.balance += amount
+            recipient.save()
 
     class Meta:
         db_table = 'users'
