@@ -7,6 +7,7 @@
             <div class="card bg-dark text-light p-4 rounded-0 border border-light">
                 <h2 class="text-center">Login</h2>
                 <form method="post">
+                    {% csrf_token %}
                     <div class="form-group mb-4">
                         <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
                         {{ form.username }}
